@@ -54,8 +54,9 @@ Enemy.prototype.catch= function() {
 		&& catchBox.x + catchBox.width > dogbox.x 
 		&& catchBox.y < dogbox.y+ dogbox.height 
 		&& catchBox.height + catchBox.y > dogbox.y) {
-
+		alert("Congrats!!!! \n You scored: " + dog.score + "points.\n Lets Try Again.");
 		dog.reset();
+
 	}
 };
 
