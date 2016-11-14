@@ -95,10 +95,8 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         dog.update();
-        // allBones.forEach(function(bone) {
-            bone.update(dt);
-        // });
-        
+
+        bone.update(dt);
     }
 
     /* This function initially draws the "game level", it will then call
@@ -156,9 +154,9 @@ var Engine = (function(global) {
         });
 
         dog.render();
-        // allBones.forEach(function(bone) {
-            bone.render();
-        // });
+        
+        bone.render();
+    
     }
 
     /* This function does nothing but it could have been a good place to
