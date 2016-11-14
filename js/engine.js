@@ -1,10 +1,10 @@
 /* Engine.js
  * This file provides the game loop functionality (update entities and render),
  * draws the initial game board on the screen, and then calls the update and
- * render methods on your player and enemy objects (defined in your app.js).
+ * render methods on your dog and enemy objects (defined in your app.js).
  *
  * A game engine works by drawing the entire game screen over and over, kind of
- * like a flipbook you may have created as a kid. When your player moves across
+ * like a flipbook you may have created as a kid. When your dog moves across
  * the screen, it may look like just that image/character is moving or being
  * drawn but that is not the case. What's really happening is the entire "scene"
  * is being drawn over and over, presenting the illusion of animation.
@@ -25,7 +25,7 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
-    canvas.width = 505;
+    canvas.width = 500;
     canvas.height = 606;
     doc.body.appendChild(canvas);
 
@@ -86,7 +86,7 @@ var Engine = (function(global) {
     /* This is called by the update function and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
      * their update() methods. It will then call the update function for your
-     * player object. These update methods should focus purely on updating
+     * dog object. These update methods should focus purely on updating
      * the data/properties related to the object. Do your drawing in your
      * render methods.
      */
@@ -94,7 +94,11 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        player.update();
+        dog.update();
+        // allBones.forEach(function(bone) {
+            bone.update(dt);
+        // });
+        
     }
 
     /* This function initially draws the "game level", it will then call
@@ -132,7 +136,7 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+                ctx.drawImage(Resources.get(rowImages[row]), col * 100, row * 80);
             }
         }
 
@@ -141,7 +145,7 @@ var Engine = (function(global) {
 
     /* This function is called by the render function and is called on each game
      * tick. Its purpose is to then call the render functions you have defined
-     * on your enemy and player entities within app.js
+     * on your enemy and dog entities within app.js
      */
     function renderEntities() {
         /* Loop through all of the objects within the allEnemies array and call
@@ -151,7 +155,10 @@ var Engine = (function(global) {
             enemy.render();
         });
 
-        player.render();
+        dog.render();
+        // allBones.forEach(function(bone) {
+            bone.render();
+        // });
     }
 
     /* This function does nothing but it could have been a good place to
@@ -170,8 +177,9 @@ var Engine = (function(global) {
         'images/stone-block.png',
         'images/water-block.png',
         'images/grass-block.png',
-        'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/dog-catcher.png',
+        'images/dog.png',
+        'images/bone.png',
     ]);
     Resources.onReady(init);
 

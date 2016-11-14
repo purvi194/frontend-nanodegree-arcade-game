@@ -1,4 +1,4 @@
-// Enemies our player must avoid
+// Enemies our dog must avoid
 var Enemy = function(x,y) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -7,7 +7,7 @@ var Enemy = function(x,y) {
     // a helper we've provided to easily load images
     this.x=x;
     this.y=y;
-    this.sprite = 'images/enemy-bug.png';
+    this.sprite = 'images/dog-catcher.png';
     this.speed = Math.floor(Math.random() * 250 + 1);
 };
 
@@ -29,7 +29,7 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y,80, 80);
 };
 
 // Function to detect collesion. Name given catch to specify the catching of dog by the dogcatcher.
@@ -44,8 +44,8 @@ Enemy.prototype.catch= function() {
 	};
 
 	var dogbox = {
-		x: player.x,
-		y: player.y,
+		x: dog.x,
+		y: dog.y,
 		width: 50,
 		height: 50
 	};
@@ -54,88 +54,178 @@ Enemy.prototype.catch= function() {
 		&& catchBox.x + catchBox.width > dogbox.x 
 		&& catchBox.y < dogbox.y+ dogbox.height 
 		&& catchBox.height + catchBox.y > dogbox.y) {
-		player.reset();
-	}
-}
 
-// Now write your own player class
+		dog.reset();
+	}
+};
+
+// Now write your own dog class
 // This class requires an update(), render() and
 // a handleInput() method.
 
-var Player = function(x,y) {
+var Dog = function(x,y) {
 	this.x=x;
 	this.y=y;
-	this.sprite = 'images/char-boy.png'
+	this.score=0;
+	this.sprite = 'images/dog.png'
 }
 
-Player.prototype.update= function(){
+Dog.prototype.update= function(){
+	this.displayScore();
 
 };
 
-Player.prototype.render = function(){
-	ctx.drawImage(Resources.get(this.sprite),this.x,this.y);
+Dog.prototype.render = function(){
+	ctx.drawImage(Resources.get(this.sprite),this.x,this.y, 90, 90);
 };
 
-Player.prototype.handleInput= function(key) {
+Dog.prototype.handleInput= function(key) {
 
 	  switch(key){
             case 'left' :
-              if (this.x >= 95) {
-                this.x = this.x - 95;
+              if (this.x >= 45) {
+                this.x = this.x - 90;
             };
               break;
             case 'right' :
-              if (this.x <= 375) {
-                this.x = this.x + 95;
+              if (this.x <= 350) {
+                this.x = this.x + 90;
               };
               break;
             case 'up' :
-                if (this.y >= 60){
-                  this.y = this.y - 83;
+                if (this.y >= 100){
+                  this.y = this.y - 80;
                 };
 
               break;
             case 'down' :
-                if (this.y <= 350){
-                  this.y = this.y + 83;
+                if (this.y <= 400){
+                  this.y = this.y + 80;
                 };
               break;
         }
 
 };
 
-Player.prototype.reset = function() {
+Dog.prototype.reset = function() {
 	this.x = 200;
-	this.y = 400;
+	this.y = 450;
+	this.score = 0;
+	bone.grab= false;
 };
 
+Dog.prototype.displayScore = function() {
+	ctx.clearRect(0,0,120,20);
+	ctx.font = "20px Verdana";
+	ctx.fillStyle = "black";
+	ctx.fillText("Score: " + this.score, 8, 20);
+};
+
+Dog.prototype.increaseScore = function() {
+	this.score++;
+};
+
+// Creating a bone class
+
+
+var Bone = function(x,y) {
+	this.x= x;
+	this.y=y;
+	this.grab=false;
+	this.speed = 50;
+	this.sprite= 'images/bone.png';
+};
+
+Bone.prototype.render = function() {
+	if(this.grab) {
+		ctx.drawImage(Resources.get(this.sprite),dog.x+20,dog.y+30,30,30);
+	}
+		else{
+			ctx.drawImage(Resources.get(this.sprite),this.x,this.y,50,50);
+		}
+	
+};
+
+Bone.prototype.update = function(dt) {
+
+	if(this.x < 505) {
+        this.x += dt * this.speed;
+    }
+    else {
+        this.x = 20;
+    }
+
+	this.fetch();
+
+	if(this.grab === true && dog.y>420)
+	{
+		this.grab=false;
+		dog.score++;
+	}
+};
+
+Bone.prototype.fetch = function() {
+	var boneBox = {
+		x: this.x,
+		y: this.y,
+		width: 20,
+		height:20
+	};
+
+	var dogbox = {
+		x: dog.x,
+		y: dog.y,
+		width: 50,
+		height: 50
+	};
+
+	if (boneBox.x < dogbox.x + dogbox.width 
+		&& boneBox.x + boneBox.width > dogbox.x 
+		&& boneBox.y < dogbox.y+ dogbox.height 
+		&& boneBox.height + boneBox.y > dogbox.y) {
+		this.grab=true;
+	}
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+// Place the dog object in a variable called dog
 
 var allEnemies= [];
-var enemy1= new Enemy(-100,50);
+var enemy1= new Enemy(-100,120);
 allEnemies.push(enemy1);
-var enemy2 = new Enemy(-100,140);
+var enemy2 = new Enemy(-100,210);
 allEnemies.push(enemy2);
-var enemy3 = new Enemy(-100,230);
+var enemy3 = new Enemy(-100,300);
 allEnemies.push(enemy3);
-var enemy4= new Enemy(-100,140);
+var enemy4= new Enemy(-100,210);
 allEnemies.push(enemy4);
-var enemy5 = new Enemy(-100,230);
+var enemy5 = new Enemy(-100,300);
 allEnemies.push(enemy5);
-var enemy6 = new Enemy(-100,50);
+var enemy6 = new Enemy(-100,120);
 allEnemies.push(enemy6);
-var enemy7= new Enemy(-100,230);
+var enemy7= new Enemy(-100,300);
 allEnemies.push(enemy7);
 
 
-var player= new Player(200,400);
+var dog= new Dog(200,450);
 
+var colArray= [130, 420, 20, 320,230];
+// var allBones = [];
+var bone = new Bone(20,70);
+// allBones.push(bone);
+// for(i= 0 ; i<5 && dog.score > 0; i++) {
+// 	var bone= new Bone(colArray[i],70);
+// 	allBones.push(bone);
+// 	cosole.log('In loop');
+// 	if(i === 4)
+// 	{
+// 		i=0;
+// 	}
+// }
 
 // This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// Dog.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
@@ -144,5 +234,5 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-    player.handleInput(allowedKeys[e.keyCode]);
+    dog.handleInput(allowedKeys[e.keyCode]);
 });
